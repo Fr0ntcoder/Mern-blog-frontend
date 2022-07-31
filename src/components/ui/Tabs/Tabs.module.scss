@@ -1,0 +1,20 @@
+@import "/src/assets/scss/variables.scss";
+.wrap {
+  display: flex;
+  width: 100%;
+  margin-bottom: 30px;
+}
+.link {
+  font-size: 16px;
+  font-weight: 500;
+  margin-right: 15px;
+  padding: 0 15px 15px 15px;
+  color: $text;
+  &--active {
+    border-bottom: 2px solid $blue;
+    color: $blue;
+  }
+  &:last-child {
+    margin-right: 0;
+  }
+}

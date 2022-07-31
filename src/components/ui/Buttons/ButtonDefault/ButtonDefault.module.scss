@@ -1,0 +1,17 @@
+@import "/src/assets/scss/variables.scss";
+.btn {
+  font-family: "Roboto", sans-serif;
+  font-size: 16px;
+  padding: 8px 15px;
+  background: $blue;
+  transition: all 0.3s ease-in-out;
+  border-radius: 4px;
+  border: none;
+  border: 1px solid $blue;
+  color: #fff;
+  cursor: pointer;
+  &:hover {
+    background: transparent;
+    color: $blue;
+  }
+}

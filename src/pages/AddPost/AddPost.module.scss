@@ -1,0 +1,48 @@
+@import "/src/assets/scss/variables.scss";
+.wrap {
+  width: 100%;
+  padding: 30px;
+  border-radius: 5px;
+  background: #fff;
+}
+.top {
+  margin-bottom: 50px;
+}
+.title {
+  display: block;
+  width: 100%;
+  font-size: 40px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  background: transparent;
+  color: $text;
+}
+.tags {
+  display: block;
+  width: 100%;
+  font-size: 20px;
+  padding-bottom: 5px;
+  background: transparent;
+  border-bottom: 1px solid $text;
+  color: $text;
+}
+.editor {
+  margin: 50px 0;
+}
+.bottom {
+  display: block;
+}
+.btn {
+  &Cancel {
+    font-size: 16px;
+    margin-left: 15px;
+    border: none;
+    transition: all 0.3s ease-in-out;
+    border-bottom: 1px solid $blue;
+    color: $blue;
+    cursor: pointer;
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+}
