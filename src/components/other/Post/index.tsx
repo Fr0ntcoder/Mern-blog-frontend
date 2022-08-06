@@ -1,67 +1,79 @@
 import React from "react";
-import styles from "./Post.module.scss";
-import { UserInfo } from "../..";
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useAppDispatch } from "../../../redux/store";
+import { fetchRemovePost } from "../../../redux/posts/fetchPosts/asyncActions";
+import { selectUserData } from "../../../redux/Auth/selectors";
+import { Author } from "../../../redux/posts/fetchPost/types";
+import { PostItem } from "../../../redux/posts/fetchPost/types";
+import { dataFormat } from "../../../utils/dataFormat";
+import { UserInfo, PostSkeleton } from "../../../components";
+import ReactMarkdown from "react-markdown";
 import { FaPen, FaTimes, FaEye, FaComment } from "react-icons/fa";
-type PostType = {
-  avatarUrl: string;
-  fullName: string;
-};
-interface PostTypeProps {
-  _id?: number;
-  title: string;
-  createdAt: string;
-  imageUrl: string;
-  user: PostType;
-  viewsCount: number;
-  commentsCount: number;
-  tags: string[];
-  children?: React.ReactNode;
-  isFullPost?: string;
-  isLoading?: boolean;
-  isEditable: boolean;
-}
-export const Post: React.FC<PostTypeProps> = ({
+import styles from "./Post.module.scss";
+
+export const Post: React.FC<PostItem> = ({
   _id,
   title,
+  text,
   createdAt,
   imageUrl,
-  user,
+  author,
   viewsCount,
   commentsCount,
   tags,
   children,
   isFullPost,
   isLoading,
-  isEditable,
 }) => {
+  const dispatch = useAppDispatch();
+  const userData: Author = useSelector(selectUserData);
+  const onClickRemove = () => {
+    if (window.confirm("Вы действительно хотите удалить статью")) {
+      dispatch(fetchRemovePost(_id));
+    }
+  };
+  if (isLoading) {
+    return <PostSkeleton />;
+  }
+
   return (
     <div className={styles.post}>
-      {isEditable && (
+      {userData?._id === author?._id && isFullPost && (
         <div className={styles.edit}>
-          <a href="#">
+          <Link to={`posts/${_id}/edit`}>
             <FaPen />
-          </a>
-          <a href="#">
+          </Link>
+          <a href="#" onClick={onClickRemove}>
             <FaTimes />
           </a>
         </div>
       )}
-      {imageUrl && (
-        <div className={styles.img}>
-          <img src={imageUrl} alt="" />
-        </div>
-      )}
-      <UserInfo {...user} createData={createdAt} />
+      <div className={styles.img}>
+        {imageUrl ? (
+          <img src={`http://localhost:7777${imageUrl}`} alt="" />
+        ) : (
+          <img src={require("../../../assets/img/empty.jpeg")} alt="" />
+        )}
+      </div>
+      {author && <UserInfo {...author} createData={dataFormat(createdAt)} />}
       <div className={styles.content}>
-        <h3 className={styles.title}>{title}</h3>
+        <h3 className={styles.title}>
+          <Link to={`/posts/${_id}`}>{title}</Link>
+        </h3>
         <ul className={styles.tagList}>
-          {tags.map((item, i) => (
-            <li className={styles.tagItem} key={i}>
-              #{item}
-            </li>
-          ))}
+          {tags &&
+            tags.map((item, i) => (
+              <li className={styles.tagItem} key={i}>
+                #{item}
+              </li>
+            ))}
         </ul>
-        {children && <div className={styles.text}>{children}</div>}
+        {text && isFullPost && (
+          <div className={styles.text}>
+            <ReactMarkdown children={text} />
+          </div>
+        )}
         <ul className={styles.infoList}>
           <li className={styles.infoItem}>
             <FaEye />

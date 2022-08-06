@@ -1,84 +1,93 @@
-import React, { useState } from "react";
-import styles from "./Register.module.scss";
+import React from "react";
+import { Navigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useAppDispatch } from "../../redux/store";
+import { selectIsAuth } from "../../redux/Auth/selectors";
+import { fetchRegister } from "../../redux/Auth/acyncAction";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { ButtonDefault } from "../../components";
 import { FaUserCircle } from "react-icons/fa";
+import { TextField } from "@mui/material";
+
+import styles from "./Register.module.scss";
+
+type RegisterProps = {
+  fullName: string;
+  email: string;
+  password: string | number;
+};
+
 const Register: React.FC = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
-  const [emailDirty, setEmailDirty] = useState(false);
-  const [passwordDirty, setPasswordDirty] = useState(false);
-  const [nameDirty, setNameDirty] = useState(false);
-  const onBlurHandler = (e: React.FocusEvent<HTMLInputElement>) => {
-    switch (e.target.name) {
-      case "name":
-        setNameDirty(true);
-        break;
-      case "email":
-        setEmailDirty(true);
-        break;
-      case "password":
-        setPasswordDirty(true);
-        break;
+  const isAuth = useSelector(selectIsAuth);
+  const dispatch = useAppDispatch();
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors, isValid },
+  } = useForm<RegisterProps>({
+    defaultValues: {
+      fullName: "Илья Пупкин",
+      email: "jambox767@mail.ru",
+      password: "",
+    },
+    mode: "onChange",
+  });
+
+  const onSubmit: SubmitHandler<RegisterProps> = async (values) => {
+    const data = await dispatch(fetchRegister(values));
+
+    if (!data.payload) {
+      alert("Не удалось зарегистрироваться!");
+    }
+
+    if ("token" in data.payload) {
+      window.localStorage.setItem("token", data.payload.token);
     }
   };
-  const onRegister = () => {};
+
+  if (isAuth) {
+    return <Navigate to="/" />;
+  }
+
   return (
     <div className={styles.wrap}>
       <h3 className={styles.title}>Создание аккаунта</h3>
       <span className={styles.icon}>
         <FaUserCircle />
       </span>
-      <form className={styles.form}>
-        <div className={styles.group}>
-          <input
-            onBlur={onBlurHandler}
-            className={`${styles.input} ${
-              nameDirty && name === "" ? styles.error : ""
-            }`}
-            name="name"
-            type="text"
-            value={name}
-            placeholder="Полное имя"
-            onChange={(e) => setName(e.target.value)}
-          />
-          {nameDirty && name === "" && (
-            <span className={styles.errorSpan}>Укажите имя</span>
-          )}
-        </div>
-        <div className={styles.group}>
-          <input
-            onBlur={onBlurHandler}
-            className={`${styles.input} ${
-              emailDirty && email === "" ? styles.error : ""
-            }`}
-            name="email"
-            type="email"
-            value={email}
-            placeholder="Email"
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          {emailDirty && email === "" && (
-            <span className={styles.errorSpan}>Неверно указана почта</span>
-          )}
-        </div>
-        <div className={styles.group}>
-          <input
-            onBlur={onBlurHandler}
-            className={`${styles.input} ${
-              passwordDirty && password === "" ? styles.error : ""
-            }`}
-            name="password"
-            type="password"
-            value={password}
-            placeholder="Пароль"
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          {passwordDirty && password === "" && (
-            <span className={styles.errorSpan}>Введите пароль</span>
-          )}
-        </div>
-        <ButtonDefault handler={onRegister} title={"Зарегистрироваться"} />
+      <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+        <TextField
+          className={styles.field}
+          {...register("fullName", { required: "Укажите имя" })}
+          label="Имя"
+          error={Boolean(errors.fullName?.message)}
+          helperText={errors.fullName?.message}
+          fullWidth
+        />
+        <TextField
+          className={styles.field}
+          {...register("email", { required: "Укажите email" })}
+          label="Email"
+          error={Boolean(errors.email?.message)}
+          helperText={errors.email?.message}
+          fullWidth
+        />
+        <TextField
+          className={styles.field}
+          {...register("password", { required: "Укажите пароль" })}
+          label="Пароль"
+          error={Boolean(errors.password?.message)}
+          helperText={errors.password?.message}
+          fullWidth
+        />
+        <ButtonDefault
+          fullWidth
+          disabled={!isValid}
+          type="submit"
+          color={"blue"}
+          title={"Зарегистрироваться"}
+        />
       </form>
     </div>
   );

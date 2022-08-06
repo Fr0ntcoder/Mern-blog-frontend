@@ -2,7 +2,9 @@ import React from "react";
 import { Outlet } from "react-router-dom";
 
 import { Header } from "../components";
+
 import styles from "./layouts.module.scss";
+
 const EmptyLayout: React.FC = () => {
   return (
     <div className={styles.wrapper}>

@@ -2,6 +2,7 @@ export * from "./layouts/Header";
 export * from "./other/Post";
 export * from "./layouts/Sidebar";
 export * from "./other/User";
+export * from "./other/Post/PostSkeleton";
 export * from "./ui/Tabs";
 export * from "./ui/Tags";
 export * from "./ui/Comments/CommentsBlock";

@@ -3,15 +3,35 @@
   font-family: "Roboto", sans-serif;
   font-size: 16px;
   padding: 8px 15px;
-  background: $blue;
   transition: all 0.3s ease-in-out;
   border-radius: 4px;
-  border: none;
-  border: 1px solid $blue;
+  border: 1px solid transparent;
   color: #fff;
   cursor: pointer;
-  &:hover {
+  &:disabled {
+    opacity: 0.2;
+  }
+  /* &:hover:not(:disabled) {
     background: transparent;
+    opacity: 0.8;
+  } */
+  &.red {
+    background: red;
+    color: #fff;
+  }
+  &.blue {
+    background: $blue;
+    color: #fff;
+  }
+  &.green {
+    background: green;
+    color: #fff;
+  }
+  &.white {
+    border-color: $blue;
     color: $blue;
   }
+}
+.fullWidth {
+  width: 100%;
 }
