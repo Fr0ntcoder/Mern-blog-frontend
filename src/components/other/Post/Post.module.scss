@@ -47,6 +47,7 @@
     color: $blue;
     &:last-child {
       margin-right: 0;
+      color: red;
     }
   }
 }
@@ -85,5 +86,39 @@
     & svg {
       margin-right: 5px;
     }
+  }
+}
+
+.skeleton {
+  width: 100%;
+  background-color: #fff;
+  border: 1px solid #dedede;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 15px;
+
+  &Content {
+    padding: 20px;
+  }
+
+  &Info {
+    margin-left: 50px;
+  }
+}
+
+.skeletonUser {
+  display: flex;
+
+  &Details {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.skeletonTags {
+  display: flex;
+
+  span {
+    margin-right: 15px;
   }
 }

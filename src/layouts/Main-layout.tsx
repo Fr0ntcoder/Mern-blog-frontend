@@ -1,8 +1,10 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 
-import { Header, Sidebar, Tabs } from "../components";
+import { Header, Sidebar } from "../components";
+
 import styles from "./layouts.module.scss";
+
 const MainLayout: React.FC = () => {
   return (
     <div className={styles.wrapper}>

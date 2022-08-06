@@ -1,59 +1,75 @@
-import React, { useState } from "react";
-import styles from "./Login.module.scss";
+import React from "react";
+import { useSelector } from "react-redux";
+import { Navigate } from "react-router-dom";
+import { useAppDispatch } from "../../redux/store";
+import { fetchAuth } from "../../redux/Auth/acyncAction";
+import { selectIsAuth } from "../../redux/Auth/selectors";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { ButtonDefault } from "../../components";
+import TextField from "@mui/material/TextField";
+
+import styles from "./Login.module.scss";
+
+type SubmitValue = {
+  email: string;
+  password: string | number;
+};
+
 const Login: React.FC = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [emailDirty, setEmailDirty] = useState(false);
-  const [passwordDirty, setPasswordDirty] = useState(false);
-  const onBlurHandler = (e: React.FocusEvent<HTMLInputElement>) => {
-    switch (e.target.name) {
-      case "email":
-        setEmailDirty(true);
-        break;
-      case "password":
-        setPasswordDirty(true);
-        break;
+  const isAuth = useSelector(selectIsAuth);
+  const dispatch = useAppDispatch();
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors, isValid },
+  } = useForm<SubmitValue>({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+    mode: "onChange",
+  });
+
+  const onSubmit: SubmitHandler<SubmitValue> = async (values) => {
+    const data = await dispatch(fetchAuth(values));
+    if (!data.payload) {
+      alert("Вы не авторизованы");
+    }
+
+    if ("token" in data.payload) {
+      window.localStorage.setItem("token", data.payload.token);
+    } else {
+      alert("Не удалось авторизоваться!");
     }
   };
-  const onLogin = () => {};
+
+  if (isAuth) {
+    return <Navigate to="/" />;
+  }
+
   return (
     <div className={styles.wrap}>
       <h3 className={styles.title}>Вход в аккаунт</h3>
-      <form className={styles.form}>
-        <div className={styles.group}>
-          <input
-            onBlur={onBlurHandler}
-            className={`${styles.input} ${
-              emailDirty && email === "" ? styles.error : ""
-            }`}
-            name="email"
-            type="email"
-            value={email}
-            placeholder="Email"
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          {emailDirty && email === "" && (
-            <span className={styles.errorSpan}>Неверно указана почта</span>
-          )}
-        </div>
-        <div className={styles.group}>
-          <input
-            onBlur={onBlurHandler}
-            className={`${styles.input} ${
-              passwordDirty && password === "" ? styles.error : ""
-            }`}
-            name="password"
-            type="password"
-            value={password}
-            placeholder="Пароль"
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          {passwordDirty && password === "" && (
-            <span className={styles.errorSpan}>Введите пароль</span>
-          )}
-        </div>
-        <ButtonDefault handler={onLogin} title={"Войти"} />
+      <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+        <TextField
+          type="email"
+          className={styles.field}
+          {...register("email", { required: "Укажите почту" })}
+          label="Email"
+          error={Boolean(errors.email?.message)}
+          helperText={errors.email?.message}
+          fullWidth
+        />
+        <TextField
+          className={styles.field}
+          {...register("password", { required: "Укажите пароль" })}
+          label="Password"
+          error={Boolean(errors.password?.message)}
+          helperText={errors.password?.message}
+          fullWidth
+        />
+        <ButtonDefault type="submit" fullWidth color={"blue"} title={"Войти"} />
       </form>
     </div>
   );

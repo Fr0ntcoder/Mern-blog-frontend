@@ -1,7 +1,10 @@
-import React from "react";
-import { Tabs, Tags, CommentsBlock } from "../..";
+import React, { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { useAppDispatch } from "../../../redux/store";
+import { fetchTags } from "../../../redux/posts/fetchTags/asyncActions";
+import { selectorTagsItems } from "../../../redux/posts/fetchTags/selectors";
+import { Tags, CommentsBlock } from "../..";
 import styles from "./Sidebar.module.scss";
-const tags = ["react", "typescript", "заметки"];
 const comments = [
   {
     user: {
@@ -19,9 +22,17 @@ const comments = [
   },
 ];
 export const Sidebar: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const { items, status } = useSelector(selectorTagsItems);
+  const isLoading = status === "loading";
+
+  useEffect(() => {
+    dispatch(fetchTags());
+  }, []);
+
   return (
     <aside className={styles.sidebar}>
-      <Tags tagsList={tags} title={"Тэги"} isLoading={false} />
+      <Tags tagsList={items} title={"Тэги"} isLoading={isLoading} />
       <CommentsBlock commentsList={comments} isLoading={false} />
     </aside>
   );

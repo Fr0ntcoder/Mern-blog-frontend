@@ -11,6 +11,9 @@
 .form {
   display: flex;
   flex-direction: column;
+  & a {
+    display: block;
+  }
 }
 .title {
   font-size: 22px;
@@ -40,4 +43,7 @@
     font-size: 14px;
     color: red;
   }
+}
+.field {
+  margin-bottom: 30px !important;
 }
