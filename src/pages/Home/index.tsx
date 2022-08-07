@@ -25,7 +25,6 @@ const Home: React.FC = () => {
             <Post
               {...item}
               commentsCount={3}
-              isFullPost
               isLoading={isPostLoading}
               key={i}
             />

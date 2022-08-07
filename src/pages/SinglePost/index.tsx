@@ -36,7 +36,7 @@ const SinglePost: React.FC = () => {
 
   return (
     <>
-      <Post {...item} commentsCount={3}></Post>
+      <Post {...item} isFullPost commentsCount={3}></Post>
       <CommentsBlock commentsList={comments} isLoading={false}>
         <CommentsForm />
       </CommentsBlock>

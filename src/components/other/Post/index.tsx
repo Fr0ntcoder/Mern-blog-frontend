@@ -39,7 +39,7 @@ export const Post: React.FC<PostItem> = ({
 
   return (
     <div className={styles.post}>
-      {userData?._id === author?._id && isFullPost && (
+      {userData?._id === author?._id && !isFullPost && (
         <div className={styles.edit}>
           <Link to={`posts/${_id}/edit`}>
             <FaPen />
