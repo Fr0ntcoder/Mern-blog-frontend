@@ -1,7 +1,7 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 
 const conf: AxiosRequestConfig = {
-  baseURL: "http://localhost:7777",
+  baseURL: process.env.REACT_APP_API_URL,
 };
 const api: AxiosInstance = axios.create(conf);
 

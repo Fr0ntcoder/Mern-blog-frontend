@@ -180,7 +180,10 @@ const AddPost: React.FC = () => {
         </div>
         {fields.imageUrl && (
           <div className={styles.img}>
-            <img src={`http://localhost:7777${fields.imageUrl}`} alt="" />
+            <img
+              src={`${process.env.REACT_APP_API_URL}${fields.imageUrl}`}
+              alt=""
+            />
           </div>
         )}
         <input

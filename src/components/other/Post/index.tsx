@@ -51,7 +51,7 @@ export const Post: React.FC<PostItem> = ({
       )}
       <div className={styles.img}>
         {imageUrl ? (
-          <img src={`http://localhost:7777${imageUrl}`} alt="" />
+          <img src={`${process.env.REACT_APP_API_URL}${imageUrl}`} alt="" />
         ) : (
           <img src={require("../../../assets/img/empty.jpeg")} alt="" />
         )}
